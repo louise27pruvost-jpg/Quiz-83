@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Classe 83 — Participer</title>
+<style>
+:root{--nuit:#20264A;--violet:#7957D5;--corail:#FF6B6B;--jaune:#FFD166;--turq:#36CFC9;--blanc:#F8F7FC;--page:#20264A;--txt:#F8F7FC;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#20264A;--txt:#F8F7FC}}
+:root[data-theme="dark"]{--page:#20264A;--txt:#F8F7FC}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--page);color:var(--txt);font-family:Nunito,Inter,system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;justify-content:center}
+#app{width:100%;max-width:480px;min-height:100%;display:flex;flex-direction:column;padding:0 16px 16px}
+.demo{display:flex;gap:8px;justify-content:center;padding:8px 0;font-size:12px;opacity:.9}
+.demo button{background:rgba(255,255,255,.12);color:var(--txt);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font:inherit;font-weight:700}
+.net{background:var(--corail);color:#fff;border-radius:10px;padding:9px 12px;font-weight:800;text-align:center;margin-bottom:8px}
+#screen{flex:1;display:flex;flex-direction:column;gap:12px;animation:in .3s both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+h1{font-size:30px;line-height:1.1;text-align:center;margin:18px 0 0}
+p{margin:0}.mut{opacity:.8;text-align:center}
+label{font-weight:800;font-size:15px}
+input{width:100%;font:inherit;font-size:22px;font-weight:800;text-align:center;padding:16px;border-radius:14px;border:3px solid transparent;background:var(--blanc);color:#303344}
+input:focus{outline:none;border-color:var(--jaune)}
+.btn{border:0;border-radius:16px;padding:18px;font:inherit;font-size:20px;font-weight:900;color:#fff;background:var(--corail);box-shadow:0 5px 0 #c94d4d;width:100%}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c94d4d}
+.err{background:rgba(255,107,107,.2);border-left:5px solid var(--corail);padding:10px 12px;border-radius:8px;font-weight:700}
+.pill{background:rgba(255,255,255,.12);padding:6px 14px;border-radius:999px;font-weight:800}
+.top{display:flex;justify-content:space-between;align-items:center}
+.timer{width:54px;height:54px;border-radius:50%;background:var(--jaune);color:var(--nuit);display:grid;place-items:center;font-size:24px;font-weight:900}
+.prog{height:8px;background:rgba(255,255,255,.15);border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--jaune);transition:width 1s linear}
+.q{font-size:20px;font-weight:900;text-align:center}
+.ans{flex:1;min-height:300px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px}
+.a{border:0;border-radius:18px;color:#fff;font:inherit;font-weight:900;font-size:19px;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;padding:10px;text-align:center}
+.a .s{font-size:38px;line-height:1}
+.a:active:not(:disabled){transform:scale(.97)}
+.c0{background:#FFB8B8;color:#20264A}.c1{background:#A9C8FF;color:#20264A}.c2{background:#FFE3A0;color:#20264A}.c3{background:#A8EBE6;color:#20264A}
+.a.sel{outline:5px solid #fff}.a.dim{opacity:.35}.a.ok{outline:5px solid #fff;box-shadow:0 0 0 8px var(--turq)}
+.big{font-size:72px;text-align:center;margin-top:20px}
+.card{background:rgba(255,255,255,.1);border-radius:16px;padding:14px;text-align:center}
+.card b{font-size:26px}
+.note{background:rgba(54,207,201,.18);border-left:5px solid var(--turq);padding:10px 14px;border-radius:8px}
+.names{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.names span{background:var(--violet);padding:6px 12px;border-radius:999px;font-weight:800}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* palette adoucie */
+:root{--violet:#9C84E0;--corail:#FF9C9C;--jaune:#FFE3A0;--turq:#8FE3DD}
+body{background:#3E4579}
+.btn{background:#FF9C9C;color:#20264A;box-shadow:0 5px 0 #d97c7c}
+.btn:active{box-shadow:0 2px 0 #d97c7c}
+.err{background:rgba(255,156,156,.22)}
+.net{background:#FF9C9C;color:#20264A}
+.names span{background:#9C84E0;color:#20264A}
+.pill{background:rgba(255,255,255,.16)}
+
+.timer{width:54px;height:54px}.a:disabled{opacity:.55}</style>
+</head>
+<body>
+<div id="app"><div id="netbar"></div><div id="screen"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const SYM=["▲","◆","●","■"],C=window.C83||{},qs=new URLSearchParams(location.search);
+let saved={};try{saved=JSON.parse(localStorage.getItem("c83")||"{}")}catch(e){}
+let code=(qs.get("c")||"").toUpperCase(),name=saved.name||"";
+const id=saved.id||(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());
+let sb=null,ch=null,joined=false,S={ph:"lobby",np:1},tm=null,left=0,off=false,jt=null,picked=null,cq=-1,note="";
+const set=h=>{$("screen").innerHTML=h};
+const tx=p=>{if(ch)ch.send({type:"broadcast",event:"c",payload:p})};
+const keep=()=>{try{localStorage.setItem("c83",JSON.stringify({id,name,code}))}catch(e){}};
+function netbar(){$("netbar").innerHTML=off&&joined?'<div class="net" role="alert">📡 Connexion interrompue. Ne ferme pas la page : on te reconnecte…</div>':""}
+function joinScreen(msg){clearInterval(tm);set(`<h1>Classe 83<br>Nos nouvelles vies !</h1><p class="mut">Entre le code affiché sur l’écran</p>
+<div><label for="code">Code de la partie</label><input id="code" maxlength="5" autocapitalize="characters" autocomplete="off" value="${esc(code)}"></div>
+<div><label for="ps">Ton pseudo</label><input id="ps" maxlength="14" autocomplete="off" value="${esc(name)}"></div>
+<div>${msg?`<div class="err" role="alert">${msg}</div>`:""}</div><button class="btn" id="jn" style="margin-top:auto">Rejoindre</button>
+<p class="mut" style="font-size:13px">Pas de compte, pas d’e-mail : juste un pseudo.</p>`);
+ $("jn").onclick=()=>{code=$("code").value.trim().toUpperCase();name=$("ps").value.trim();connect()}}
+function connect(){
+ if(code.length<5)return joinScreen("Le code a 5 caractères. Vérifie le code affiché sur l’écran.");
+ if(!name)return joinScreen("Choisis un pseudo pour continuer.");
+ if(!C.SUPABASE_URL||!window.supabase)return joinScreen("Le jeu n’est pas disponible pour le moment. Vérifie ta connexion Internet.");
+ set('<div class="big">⏳</div><h1>Connexion…</h1>');
+ if(ch){try{sb.removeChannel(ch)}catch(e){}}
+ sb=sb||window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_KEY);joined=false;
+ ch=sb.channel("c83-"+code,{config:{broadcast:{self:false}}});
+ ch.on("broadcast",{event:"c"},({payload})=>onMsg(payload||{}));
+ ch.subscribe(s=>{
+  if(s==="SUBSCRIBED"){off=false;netbar();tx({t:"join",id,name});
+   if(!joined){clearTimeout(jt);jt=setTimeout(()=>{if(!joined)joinScreen("Aucune partie trouvée avec ce code. Vérifie le code, ou attends que l’animateur ouvre la salle.")},7000)}
+   else render()}
+  else if(s==="CLOSED"||s==="CHANNEL_ERROR"||s==="TIMED_OUT"){off=true;netbar();if(!joined&&s!=="CLOSED")joinScreen("Connexion impossible. Vérifie ta connexion Internet et réessaie.")}})}
+function onMsg(m){
+ if(m.to&&m.to!==id)return;
+ if(m.t==="jr"){clearTimeout(jt);if(m.ok){joined=true;name=m.name;keep();tx({t:"hello",id});render()}
+  else joinScreen(m.r==="pris"?"Ce pseudo est déjà pris. Essaie-en un autre.":"Choisis un pseudo pour continuer.")}
+ else if(!joined)return;
+ else if(m.t==="st"){S=m;
+  if(m.ph==="count"){if(m.qi!==cq){cq=m.qi;picked=null;note=""}left=m.left;if(!m.paused)timer();else clearInterval(tm)}else clearInterval(tm);render()}
+ else if(m.t==="ar"){if(m.ok){note=""}else{
+  const t={late:"Trop tard : ta réponse n’a pas été acceptée.",closed:"Les réponses ne sont pas ouvertes.",dup:"Tu as déjà répondu à cette question.",unknown:"Reconnexion en cours, réessaie dans un instant.",bad:"Réponse non valide."};
+  note="⚠ "+(t[m.r]||"Réponse refusée.");if(m.r!=="dup")picked=null;if(m.r==="unknown")tx({t:"join",id,name})}
+  render()}
+ else if(m.t==="end"){joined=false;clearInterval(tm);try{localStorage.removeItem("c83")}catch(e){}
+  set('<div class="big">🎉</div><h1>La partie est terminée</h1><p class="mut">Merci pour ces retrouvailles !</p>')}}
+function timer(){clearInterval(tm);const end=Date.now()+left*1000;
+ tm=setInterval(()=>{left=Math.max(0,Math.ceil((end-Date.now())/1000));const t=$("tt");if(t)t.textContent=left;const p=$("pg");if(p)p.style.width=Math.min(100,left/(S.tot||left||1)*100)+"%";
+  if(left<=0){clearInterval(tm);document.querySelectorAll(".a").forEach(b=>b.disabled=true)}},250)}
+function answer(k){if(off){note="📡 Pas de connexion : ta réponse n’est pas partie. Réessaie dans un instant.";return render()}
+ picked=k;note="";tx({t:"ans",id,qi:S.qi,k});render()}
+function render(){netbar();if(!joined)return;const s=S;
+ if(s.ph==="lobby")set(`<div class="big">🙌</div><h1>Tu es dans la partie, ${esc(name)} !</h1><p class="mut">Regarde l’écran principal : le jeu va bientôt commencer.</p><div class="card"><b>${s.np||1}</b> participant(s) connecté(s)</div>`);
+ else if(s.ph==="wait")set(`<div class="top"><span class="pill">Question ${s.qi+1} / ${s.n}</span></div><div class="big">👀</div><h1>Regarde l’écran principal !</h1><p class="mut">Les réponses vont s’ouvrir.</p>`);
+ else if(s.ph==="count"){const lock=picked!==null||s.paused;
+  set(`<div class="top"><span class="pill">Question ${s.qi+1} / ${s.n}</span><div class="timer" id="tt">${left}</div></div><div class="prog"><i id="pg" style="width:${Math.min(100,left/(s.tot||left||1)*100)}%"></i></div><p class="q">${esc(s.q)}</p>
+  <div class="ans">${s.a.map((x,i)=>`<button class="a c${i} ${picked===i?"sel":picked!==null?"dim":""}" ${lock||left<=0?"disabled":""} data-k="${i}"><span class="s" aria-hidden="true">${SYM[i]}</span>${esc(x)}</button>`).join("")}</div>
+  <p class="mut" style="min-height:24px;font-weight:800">${s.paused?"⏸ Jeu en pause":note||(picked!==null?"✅ Réponse envoyée !":"")}</p>`);
+  document.querySelectorAll(".a").forEach(b=>b.onclick=()=>answer(+b.dataset.k))}
+ else if(s.ph==="result"){const r=(s.res||{})[id]||{g:0,s:0,r:"–",k:-1},ok=r.k===s.ok,none=r.k<0;
+  set(`<div class="big">${none?"⏱":ok?"🎉":"😅"}</div><h1>${none?"Pas de réponse":ok?"Bonne réponse !":"Raté, mais bien tenté !"}</h1>
+  <div class="card"><b>${ok?"+ "+r.g+" points":"+ 0 point"}</b><p class="mut">Tu es ${r.r}${r.r===1?"ʳᵉ":"ᵉ"} · ${r.s} pts</p></div>
+  <div class="note">✔ Bonne réponse : ${SYM[s.ok]} ${esc(s.a[s.ok])}</div>${s.c?`<div class="note">💬 ${esc(s.c)}</div>`:""}`)}
+ else if(s.ph==="fin"){const r=(s.res||{})[id]||{s:0,r:"–"};
+  set(`<div class="big">🏆</div><h1>Tu finis ${r.r}${r.r===1?"ʳᵉ":"ᵉ"} !</h1><div class="card"><b>${r.s} points</b></div><p class="mut" style="font-size:18px">La classe 83 n’a pas pris une ride !<br>Merci pour ces retrouvailles !</p>`)}}
+if(saved.id&&saved.name&&saved.code&&(!qs.get("c")||qs.get("c").toUpperCase()===saved.code)){code=saved.code;connect()}else joinScreen();
+</script>
+</body>
+</html>
