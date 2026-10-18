@@ -3,5 +3,5 @@
 window.C83={
   SUPABASE_URL:"https://cgphejfthijwvioeatyt.supabase.co",
   SUPABASE_KEY:"sb_publishable_WGo9-mwk4TqA0dBoeUI-YA_WVQxfnls",  
-  PLAY_URL:""        // adresse en ligne de play.html (ex. https://moncompte.github.io/classe83/play.html)
+  PLAY_URL:"https://louise27pruvost-jpg.github.io/Quiz-83/play.html"
 };
